@@ -13,6 +13,7 @@ use bump::BumpAllocator;
 
 pub struct Dummy;
 pub mod bump;
+pub mod linked_list;
 
 unsafe impl GlobalAlloc for Dummy {
     unsafe fn alloc(&self, _layout: Layout) -> *mut u8 {
