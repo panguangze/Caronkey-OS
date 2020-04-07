@@ -14,10 +14,6 @@ pub struct MergedListAllocator {
 }
 
 impl ListNode {
-    const fn new(size: usize) -> Self {
-        Self{size, next: None}
-    }
-
     fn start_addr(&self) -> usize {
         self as *const Self as usize
     }
@@ -30,11 +26,16 @@ impl ListNode {
 impl MergedListAllocator {
     // 这个函数创建一个空的堆
     pub const fn empty() -> Self {
-        Self{head: ListNode::new(0)}
+        Self{
+            ListNode {
+                size: 0,
+                next: None,
+            }
+        }
     }
     // 这个函数根据给定的一组值创建一个堆
     pub unsafe fn new(start_addr: usize, heap_size: usize) -> Self {
-
+        
     }
 
 }
