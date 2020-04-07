@@ -6,6 +6,7 @@
 #![feature(const_fn)]
 #![test_runner(crate::test_runner)]
 #![reexport_test_harness_main = "test_main"]
+#![feature(alloc_layout_extra)]
 
 extern crate alloc;
 
