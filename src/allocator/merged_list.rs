@@ -182,7 +182,38 @@ fn deallocate(mut listNode: &mut ListNode, addr: usize, mut size: usize) {
         let next_list_node_info = listNode.next.as_ref().map(|next| next.info());
 
         match next_list_node_info {
-            
+            Some(next) if listNode_addr + listNode.size == addr && addr + size == next.addr => {
+                listNode.size += size + next.size;
+                listNode.next = next.next.as_mut().unwrap().next.take();
+            }
+            _ if listNode_addr + listNode.size == addr => {
+                listNode.size += size;
+            }
+            Some(next) if addr + size == next.addr => {
+                listNode.next = listNode.next.as_mut().unwrap().next.take();
+                size += next.size;
+                continue;
+            }
+            Some(next) if next.addr <= addr => {
+                listNode = move_helper(listNode).next.as_mut().unwrap();
+                continue;
+            }
+            _ => {
+                let new_list_node = ListNode {
+                    size: size;
+                    next: listNode.next.take();
+                };
+
+                debug_assert_eq!(addr % align_of::<ListNode>(), 0);
+                let ptr = addr as *mut ListNode;
+                unsafe {ptr.write(next_list_node_info)};
+                listNode.next = Some(unsafe {&mut *ptr});
+            }
         }
+        break;
     }
+}
+
+fn move_helper<T>(x: T) -> T {
+    x
 }
